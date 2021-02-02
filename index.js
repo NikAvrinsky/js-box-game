@@ -6,28 +6,21 @@ const $timeHeader = document.querySelector('#time-header')
 const $resultHeader = document.querySelector('#result-header')
 const $result = document.querySelector('#result')
 const color = ['red', 'blue', 'green', 'yellow', 'pink']
-
-var score = 0
-var isGameStarted = false
-
-$start.addEventListener('click',startGame)
-$game.addEventListener('click', handleBoxClick)
-$gameTime.addEventListener('imput', setGameTime)
-
-function hide($el) {
-  $el.classList.add('hide')
+const game = {
+  score: 0,
+  isStarted: false
 }
 
-function show($el) {
-  $el.classList.remove('hide')
-}
+const getRandom = (min, max) => Math.floor(Math.random() * (max - min) + min)
+const hide = ($el) => $el.classList.add('hide')
+const show = ($el) => $el.classList.remove('hide')
 
-function startGame() {
+const startGame = () => {
   console.log('Start')
-  score = 0
+  game.score = 0
   setGameTime()
   $gameTime.setAttribute('disabled', true)
-  isGameStarted = true
+  game.isStarted = true
   hide($resultHeader)
   show($timeHeader)
   hide($start)
@@ -47,17 +40,17 @@ function startGame() {
   renderBox()
 }
 
-function setGameScore() {
-  $result.textContent = score.toString()
+const setGameScore = () => {
+  $result.textContent = game.score.toString()
 }
 
-function setGameTime() {
-  var time = +$gameTime.value
+const setGameTime = () => {
+  const time = +$gameTime.value
   $time.textContent = time
 }
 
-function endGame() {
-  isGameStarted = false
+const endGame = () => {
+  game.isStarted = false
   setGameScore()
   show($start)
   $game.style.backgroundColor = '#ccc'
@@ -65,22 +58,19 @@ function endGame() {
   hide($timeHeader)
   show($resultHeader)
   $gameTime.removeAttribute('disabled')
-
-
 }
 
-function handleBoxClick(event) {
-  if (!isGameStarted) {
+const handleBoxClick = (event) => {
+  if (!game.isStarted) {
     return
   }
-
-  if (event.target.dataset) {
+  if (event.target.dataset.box) {
     renderBox()
-    score++
+    game.score++
   }
 }
 
-function renderBox() {
+const renderBox = () => {
   $game.innerHTML = ''
   const box = document.createElement('div')
   const boxSize = getRandom(30, 100)
@@ -101,6 +91,6 @@ function renderBox() {
   
 }
 
-function getRandom(min, max) {
-  return Math.floor(Math.random() * (max - min) + min)
-}
+$start.addEventListener('click',startGame)
+$game.addEventListener('click', handleBoxClick)
+$gameTime.addEventListener('imput', setGameTime)
